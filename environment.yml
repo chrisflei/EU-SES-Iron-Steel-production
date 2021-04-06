@@ -8,6 +8,8 @@ dependencies:
     - pip:
         - datapackage==1.15.1
         - geopy==2.0.0
+        - matplotlib
+        - mapclassify
         - numpy==1.19.1
         - openpyxl==3.0.6
         - spopt==0.1.0
