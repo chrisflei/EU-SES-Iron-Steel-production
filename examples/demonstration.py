@@ -7,6 +7,12 @@ import numpy as np
 import os, sys
 # sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import euses
+eu_ds = euses.EUSES(['Austria'],2010)
+for c in ['Power','Heat','Iron_and_Steel','Hydro','Heat_Pumps','VRE_Capacity_Factor','Area','Power_Plants']:
+    eu_ds.add(c)
+    print('adding'+'_'+c)
+
+
 
 eu_ds = euses.import_dataset('euses_datasets.nc')
 eu_ds.add('Iron_and_Steel', h2_per_t = 60, h2_kWh_per_kg = 33.33, power_eaf = 0.65, power_add = 0.32, dic_correction = {'DE':45e6})
@@ -29,8 +35,8 @@ eu_ds.ds['rooftop_pv'] = eu_ds.ds['rooftop_pv']*1
 eu_ds.ds['utility_pv'] = eu_ds.ds['utility_pv']*0.50
 
 filt_ds = eu_ds.filter_countries(['Germany'])
-filt_ds.create_calliope_model(op_mode='plan',sectors=['power','heat','iron and steel'],co2_cap_factor=0.2, national=True)
 filt_ds.create_regions('poli_regions')
+filt_ds.create_calliope_model(op_mode='plan',sectors=['power','heat','iron and steel'],co2_cap_factor=0.2, national=True)
 model = calliope.Model('calliope_model/model.yaml',scenario='time_3H',override_dict={'run.solver': 'cbc'})
 model.run()
 model.get_formatted_array('resource').loc[{'techs':'demand_hydrogen'}]
